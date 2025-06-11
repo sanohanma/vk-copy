@@ -1,21 +1,10 @@
 
-import './App.css'
-import { Routes, Route } from 'react-router-dom';
-import Layout from './components/layout/Layout'
-import Home from './components/pages/home/Home'
-import './index.css'
+import './App.css';
+import './index.css';
+import RoutesComponent from './components/routes/Routes'; // ✅ путь к маршрутам
 
 function App() {
-
-
-  return (
-    <>
-    <Layout>
-    <Routes/>
-    <Home />
-    </Layout>
-    </>
-  )
+  return <RoutesComponent />;
 }
 
-export default App
+export default App;
