@@ -1,7 +1,19 @@
+// src/layout/sidebar/UserItems.tsx
 import React, { FC } from 'react';
-import { Box, Avatar, Card, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import {
+  Box,
+  Avatar,
+  Card,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { QuestionAnswer } from '@mui/icons-material';
+import { users } from './dataUsers';
+
 const UserItems: FC = () => {
   const navigate = useNavigate();
 
@@ -19,7 +31,7 @@ const UserItems: FC = () => {
             alignItems: 'center',
             textDecoration: 'none',
             color: '#111',
-            marginBottom: 12
+            marginBottom: 12,
           }}
         >
           <Box
@@ -27,14 +39,10 @@ const UserItems: FC = () => {
               position: 'relative',
               marginRight: 2,
               width: 50,
-              height: 50
+              height: 50,
             }}
           >
-            <Avatar
-              src={user.avatar}
-              alt={user.name}
-              sx={{ width: 46, height: 46, borderRadius: '50%' }}
-            />
+            <Avatar src={user.avatar} alt={user.name} sx={{ width: 46, height: 46, borderRadius: '50%' }} />
             {user.isInNetwork && (
               <Box
                 sx={{
@@ -45,7 +53,7 @@ const UserItems: FC = () => {
                   position: 'absolute',
                   bottom: 0,
                   right: 0,
-                  borderRadius: '50%'
+                  borderRadius: '50%',
                 }}
               />
             )}
@@ -69,3 +77,4 @@ const UserItems: FC = () => {
 };
 
 export default UserItems;
+

@@ -1,5 +1,15 @@
+// src/layout/sidebar/Menu.tsx
 import React, { FC } from 'react';
-import { Box, Avatar, Card, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import {
+  Box,
+  Avatar,
+  Card,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { menu } from './dataMenu';
 
@@ -15,7 +25,7 @@ const Menu: FC = () => {
         border: 'none',
         borderRadius: 3,
         marginTop: 5,
-        marginBottom: 10
+        marginBottom: 10,
       }}
     >
       <Link
@@ -25,7 +35,7 @@ const Menu: FC = () => {
           alignItems: 'center',
           textDecoration: 'none',
           color: '#111',
-          marginBottom: 12
+          marginBottom: 12,
         }}
       >
         <Box
@@ -34,7 +44,7 @@ const Menu: FC = () => {
             marginRight: 2,
             borderRadius: '50%',
             width: 50,
-            height: 50
+            height: 50,
           }}
         >
           <Avatar
@@ -51,7 +61,7 @@ const Menu: FC = () => {
               position: 'absolute',
               bottom: 0,
               right: 0,
-              borderRadius: '50%'
+              borderRadius: '50%',
             }}
           />
         </Box>

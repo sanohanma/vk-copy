@@ -1,34 +1,27 @@
-import React, { FC, ReactNode } from 'react'
-import Header from './header/Header'
-import Sidebar from './sidebar/Sidebar' // не забудь импортировать Sidebar
-import { Grid } from '@mui/material'
+import React, { FC, ReactNode } from 'react';
+import { Grid, Box } from '@mui/material';
 
 interface LayoutProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 const Layout: FC<LayoutProps> = ({ children }) => {
   return (
-    <>
-    <div>
-      <Header />
-      <Grid container spacing={2}  paddingX={5}  marginTop={2}>
-        <Grid item md ={3}>
-        <Sidebar />
+    <Box sx={{ padding: 2 }}>
+      <Grid container spacing={2}>
+        <Grid item md={3} xs={12} sx={{ backgroundColor: '#eee' }}>
+          Sidebar
         </Grid>
-        <Grid item md ={9}>
-        {children}
-
+        <Grid item md={9} xs={12} sx={{ backgroundColor: '#ccc' }}>
+          {children}
         </Grid>
-
-
       </Grid>
-     
-      
-    </div>
-    </>
-  )
-}
+    </Box>
+  );
+};
 
-export default Layout
+export default Layout;
+
+
+
 
