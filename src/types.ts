@@ -9,7 +9,7 @@ export interface IUser {
     id: number
     avatar: string
     name: string
-    isInNetwork: boolean
+    isInNetwork?: boolean
 }
 
 export interface IPost {

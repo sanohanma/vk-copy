@@ -2,9 +2,6 @@ import React, { FC } from 'react';
 import { Box, Avatar, Card, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { QuestionAnswer } from '@mui/icons-material';
-
-
-
 const UserItems: FC = () => {
   const navigate = useNavigate();
 
