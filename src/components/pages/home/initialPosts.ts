@@ -16,6 +16,8 @@ export const initialPosts: IPost[] = [
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSASqkODc7D-ny_bje8cMKMNnZg6BJExsRNDg&s',
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSX3HxkDCVtZrdivin5LDj82tc0eEVleiObSw&s',
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE-yyLd4sQZbPQqlQgpwUofJzIMzOSK-JDVQ&s',
+      'https://cs13.pikabu.ru/post_img/big/2021/03/07/2/161508081816065692.jpg',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZdThFVO5HKQeafEAqLQQWqLOAWkS2xbZpTw&s',
     ],
   },
 ];

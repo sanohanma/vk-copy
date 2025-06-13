@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { routes } from './list'; // ✅ относительный путь
 import Layout from '../layout/Layout';
-import Error404 from '../pages/home/Error404'; // ты можешь сделать эту страницу отдельно или добавить в /pages/common
+import Error404 from '../pages/Error404'; // ты можешь сделать эту страницу отдельно или добавить в /pages/common
 
 const RoutesComponent: FC = () => {
   const isAuth = true;

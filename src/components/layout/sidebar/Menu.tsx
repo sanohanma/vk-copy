@@ -38,7 +38,7 @@ const Menu: FC = () => {
           marginBottom: 12,
         }}
       >
-        <Box
+        {/* <Box
           sx={{
             position: 'relative',
             marginRight: 2,
@@ -47,11 +47,6 @@ const Menu: FC = () => {
             height: 50,
           }}
         >
-          <Avatar
-            src="https://cdn-icons-png.flaticon.com/512/219/219983.png"
-            alt="avatar"
-            sx={{ width: 46, height: 46 }}
-          />
           <Box
             sx={{
               backgroundColor: '#4FFB14',
@@ -64,8 +59,8 @@ const Menu: FC = () => {
               borderRadius: '50%',
             }}
           />
-        </Box>
-        <span style={{ fontSize: 14 }}>Коля Буткеевич</span>
+        </Box> */}
+     
       </Link>
 
       <List>

@@ -1,5 +1,7 @@
 import React, { FC, ReactNode } from 'react';
-import { Grid, Box } from '@mui/material';
+import Header from './header/Header';
+import Sidebar from './sidebar/Sidebar';
+import { Box } from '@mui/material';
 
 interface LayoutProps {
   children: ReactNode;
@@ -7,20 +9,26 @@ interface LayoutProps {
 
 const Layout: FC<LayoutProps> = ({ children }) => {
   return (
-    <Box sx={{ padding: 2 }}>
-      <Grid container spacing={2}>
-        <Grid item md={3} xs={12} sx={{ backgroundColor: '#eee' }}>
-          Sidebar
-        </Grid>
-        <Grid item md={9} xs={12} sx={{ backgroundColor: '#ccc' }}>
-          {children}
-        </Grid>
-      </Grid>
-    </Box>
+    <>
+      <Header />
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: '25% 1fr',
+          paddingX: 5,
+          marginTop: 2,
+          gap: 2,
+        }}
+      >
+        <Sidebar />
+        <Box>{children}</Box>
+      </Box>
+    </>
   );
 };
 
 export default Layout;
+
 
 
 
