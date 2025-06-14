@@ -1,5 +1,4 @@
-
-// src/routes/list.tsx
+// src/components/routes/list.tsx
 import Auth from '../pages/auth/Auth';
 import Friends from '../pages/friends/Friends';
 import Home from '../pages/home/Home';
@@ -15,5 +14,3 @@ export const routes = [
   { path: '/friends/:id', element: <Friends />, auth: true },
   { path: '/auth', element: <Auth />, auth: false },
 ];
-
-

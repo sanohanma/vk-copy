@@ -3,48 +3,26 @@ import { IPost } from '../../../types';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { useAuth } from '../../providers/useAuth';
 import Card from '../../ui/Card';
-import { Avatar, Box, ImageList, ImageListItem, CircularProgress, Typography } from '@mui/material';
+import { Avatar, Box, ImageList, ImageListItem, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { initialPosts } from './initialPosts';
 
 const Posts: FC = () => {
   const { db } = useAuth();
-  const [posts, setPosts] = useState<IPost[]>([]);
-  const [loading, setLoading] = useState(true); // добавили loading
+  const [posts, setPosts] = useState<IPost[]>(initialPosts);
+  
 
   useEffect(() => {
-    setLoading(true);
-    const unsub = onSnapshot(collection(db, 'posts'), (snapshot) => {
-      const array: IPost[] = [];
-      snapshot.forEach((doc) => {
-        array.push(doc.data() as IPost);
-      });
-      setPosts(array);
-      setLoading(false); // данные получили, выключаем загрузку
-    }, (error) => {
-      console.error('Ошибка при загрузке постов:', error);
-      setLoading(false);
-    });
+      const unsub = onSnapshot(collection(db,'posts'),doc =>{
+        doc.forEach((d:any) =>{
+          setPosts(prev => [...prev,d.data()])
+        })
+      })
+  
     return () => {
       unsub();
     };
   }, [db]);
-
-  if (loading) {
-    return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
-
-  if (posts.length === 0) {
-    return (
-      <Typography variant="body1" align="center" sx={{ marginTop: 4 }}>
-        Пока нет постов.
-      </Typography>
-    );
-  }
-
   return (
     <>
       {posts.map((post, idx) => (

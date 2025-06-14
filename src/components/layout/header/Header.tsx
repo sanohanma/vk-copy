@@ -16,7 +16,7 @@ const Header: FC = () => {
   return (
   <header className={styles.header}>
     <div className={styles.imgWrapper}>
-      <img src={logoImg} alt="" />
+      <img style={{width:30,height:30 , position:'absolute',left:25, top:10}} src="src/assets/vk-logo.png" alt="" />
     </div>
       <div className={styles.wrapper}>
         {!isSearchActive &&
@@ -32,3 +32,4 @@ const Header: FC = () => {
 }
 
 export default Header
+

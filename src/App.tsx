@@ -1,8 +1,11 @@
+
+
 import './App.css';
 import './index.css';
 import RoutesComponent from './components/routes/Routes';
-import { initializeApp } from 'firebase/app';
 import { AuthProvider } from './components/providers/AuthProvider';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { initializeApp } from 'firebase/app';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBg9c9ZdAjhS84V9PpHo-EY6aVCDLdJWU0",
@@ -17,12 +20,12 @@ initializeApp(firebaseConfig);
 
 function App() {
   return (
-    <AuthProvider>
-      <RoutesComponent />
-    </AuthProvider>
+    <Router>
+      <AuthProvider>
+        <RoutesComponent />
+      </AuthProvider>
+    </Router>
   );
 }
 
 export default App;
-
-

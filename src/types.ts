@@ -22,13 +22,13 @@ export interface IPost {
 export interface IMenuItem {
   title: string;
   link: string;
-  icon: OverridableComponent<SvgIconTypeMap<{}, 'svg'>> & {
+  icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & {
     muiName: string;
   };
 }
 
 export interface IMessage {
-  user: IUser;
-  message: string;
-}
+  user:IUser
+  message:string
 
+}

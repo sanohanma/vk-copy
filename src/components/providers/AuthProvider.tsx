@@ -1,10 +1,12 @@
-// src/components/providers/AuthProvider.tsx
+
+
+
 import React, { createContext, FC, useEffect, useMemo, useState, ReactNode } from 'react';
 import { IUser, TypeSetState } from '../../types';
 import { Auth, getAuth, onAuthStateChanged } from 'firebase/auth';
 import { users } from '../layout/sidebar/dataUsers';
 import { useNavigate } from 'react-router-dom';
-import { getFirestore, Firestore } from 'firebase/firestore/lite';
+import { getFirestore, Firestore } from 'firebase/firestore';
 
 interface IContext {
   user: IUser | null;
@@ -22,7 +24,7 @@ interface AuthProviderProps {
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<IUser | null>(null);
-  const [loading, setLoading] = useState(true); // загрузка статуса авторизации
+  const [loading, setLoading] = useState(true); 
   const ga = getAuth();
   const db = getFirestore();
   const navigate = useNavigate();
@@ -31,14 +33,14 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     const unListen = onAuthStateChanged(ga, (authUser) => {
       if (authUser) {
         setUser({
-          id: Number(authUser.uid) || 1, // fallback в число
+          id: Number(authUser.uid) || 1,
           avatar: users[1]?.avatar || '',
           name: authUser.displayName || '',
         });
       } else {
         setUser(null);
       }
-      setLoading(false); // по окончании проверки выключаем загрузку
+      setLoading(false);
     });
 
     return () => {
@@ -55,10 +57,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   }), [user, ga, db, loading]);
 
   if (loading) {
-    // Пока проверяем, можно вывести простой индикатор
     return <div style={{ textAlign: 'center', marginTop: 50 }}>Загрузка...</div>;
   }
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };
-
