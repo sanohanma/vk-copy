@@ -38,28 +38,6 @@ const Menu: FC = () => {
           marginBottom: 12,
         }}
       >
-        {/* <Box
-          sx={{
-            position: 'relative',
-            marginRight: 2,
-            borderRadius: '50%',
-            width: 50,
-            height: 50,
-          }}
-        >
-          <Box
-            sx={{
-              backgroundColor: '#4FFB14',
-              border: '1px solid #F1F7FA',
-              width: 12,
-              height: 12,
-              position: 'absolute',
-              bottom: 0,
-              right: 0,
-              borderRadius: '50%',
-            }}
-          />
-        </Box> */}
      
       </Link>
 

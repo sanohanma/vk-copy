@@ -1,58 +1,64 @@
-// src/components/pages/home/Posts.tsx
-import React, { FC } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { IPost } from '../../../types';
-import { Box, Avatar, ImageList, ImageListItem } from '@mui/material';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { useAuth } from '../../providers/useAuth';
+import Card from '../../ui/Card';
+import { Avatar, Box, ImageList, ImageListItem, CircularProgress, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-interface IPosts {
-  posts: IPost[];
-}
+const Posts: FC = () => {
+  const { db } = useAuth();
+  const [posts, setPosts] = useState<IPost[]>([]);
+  const [loading, setLoading] = useState(true); // добавили loading
 
-const Posts: FC<IPosts> = ({ posts }) => {
+  useEffect(() => {
+    setLoading(true);
+    const unsub = onSnapshot(collection(db, 'posts'), (snapshot) => {
+      const array: IPost[] = [];
+      snapshot.forEach((doc) => {
+        array.push(doc.data() as IPost);
+      });
+      setPosts(array);
+      setLoading(false); // данные получили, выключаем загрузку
+    }, (error) => {
+      console.error('Ошибка при загрузке постов:', error);
+      setLoading(false);
+    });
+    return () => {
+      unsub();
+    };
+  }, [db]);
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (posts.length === 0) {
+    return (
+      <Typography variant="body1" align="center" sx={{ marginTop: 4 }}>
+        Пока нет постов.
+      </Typography>
+    );
+  }
+
   return (
     <>
       {posts.map((post, idx) => (
-        <Box
-          key={`Post-${idx}`}
-          sx={{
-            border: '1px solid #e2e2e2',
-            borderRadius: '10px',
-            padding: 2,
-            marginTop: 4,
-          }}
-        >
-          <Link
-            to={`/profile/${post.author.id}`}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              textDecoration: 'none',
-              color: '#111',
-              marginBottom: 12,
-            }}
-          >
-            <Box
-              sx={{
-                position: 'relative',
-                marginRight: 2,
-                width: 50,
-                height: 50,
-              }}
-            >
-              <Avatar
-                src={post.author.avatar}
-                alt={post.author.name}
-                sx={{ width: 46, height: 46 }}
-              />
+        <Card key={idx}>
+          <Link to={`/profile/${post.author.id}`} style={{ display: 'flex', alignItems: 'center', textDecoration: 'none', color: '#111', marginBottom: 12 }}>
+            <Box sx={{ position: 'relative', marginRight: 2, width: 50, height: 50 }}>
+              <Avatar src={post.author.avatar} alt={post.author.name} sx={{ width: 46, height: 46 }} />
             </Box>
             <div>
               <div style={{ fontSize: 14 }}>{post.author.name}</div>
               <div style={{ fontSize: 14, opacity: 0.6 }}>{post.createdAt}</div>
             </div>
           </Link>
-
           <p>{post.content}</p>
-
           {post.images && post.images.length > 0 && (
             <ImageList variant="masonry" cols={3} gap={8}>
               {post.images.map((image) => (
@@ -62,10 +68,12 @@ const Posts: FC<IPosts> = ({ posts }) => {
               ))}
             </ImageList>
           )}
-        </Box>
+        </Card>
       ))}
     </>
   );
 };
 
 export default Posts;
+
+

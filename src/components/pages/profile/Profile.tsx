@@ -1,9 +1,17 @@
-import React, { FC } from 'react'
+// src/pages/profile/Profile.tsx
+import React, { FC } from 'react';
+import Card from '../../ui/Card';
+import { Avatar } from '@mui/material';
+import { useAuth } from '../../providers/useAuth';
 
-const Profile : FC = () => {
+const Profile: FC = () => {
+  const { user } = useAuth();
   return (
-    <div> Profile</div>
-  )
-}
+    <Card>
+      <Avatar src={user?.avatar} />
+      <h1>{user?.name}</h1>
+    </Card>
+  );
+};
 
-export default Profile
+export default Profile;

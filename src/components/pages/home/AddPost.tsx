@@ -1,57 +1,65 @@
-import React, { FC, useState, KeyboardEvent } from 'react';
-import { Box, TextField } from '@mui/material';
-import { IPost, TypeSetState } from '../../../types';
-import { users } from '../../layout/sidebar/dataUsers';
+// src/pages/home/AddPost.tsx
+import React, { FC, KeyboardEvent, useState } from 'react';
+import { Alert, Box, TextField } from '@mui/material';
+import { useAuth } from '../../providers/useAuth';
+import { addDoc, collection } from 'firebase/firestore/lite';
 
-interface IAddPost {
-  setPosts: TypeSetState<IPost[]>;
-}
-
-const AddPost: FC<IAddPost> = ({ setPosts }) => {
+const AddPost: FC = () => {
   const [content, setContent] = useState('');
+  const { user, db } = useAuth();
+  const [error, setError] = useState('');
 
-  const addPostHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+  const addPostHandler = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && content.trim()) {
-      setPosts(prev => [
-        {
-          author: users[0],
+      try {
+        await addDoc(collection(db, 'posts'), {
+          author: user,
           content,
-          createdAt: '5 минут назад',
-        },
-        ...prev,
-      ]);
-      setContent('');
+          createdAt: new Date().toISOString(),
+        });
+        setContent('');
+      } catch (e: any) {
+        setError(e.message || 'Ошибка при добавлении поста');
+      }
     }
   };
 
   return (
-    <Box
-      sx={{
-        border: '1px solid #e2e2e2',
-        borderRadius: '10px',
-        padding: '2px',
-      }}
-    >
-      <TextField
-        label="Расскажи,что у тебя нового"
-        variant="outlined"
-        InputProps={{
-          sx: {
-            borderRadius: '25px',
-            width: '100%',
-            bgcolor: '#F9F9F9',
-          },
-        }}
+    <>
+      {error && (
+        <Alert severity="error" style={{ marginBottom: 20 }}>
+          {error}
+        </Alert>
+      )}
+      <Box
         sx={{
-          width: '100%',
+          border: '1px solid #e2e2e2',
+          borderRadius: '10px',
+          padding: '2px',
         }}
-        onKeyDown={addPostHandler}  // поменял onKeyPress на onKeyDown
-        onChange={e => setContent(e.target.value)}
-        value={content}
-      />
-    </Box>
+      >
+        <TextField
+          label="Расскажи, что у тебя нового"
+          variant="outlined"
+          InputProps={{
+            sx: {
+              borderRadius: '25px',
+              width: '100%',
+              bgcolor: '#F9F9F9',
+            },
+          }}
+          sx={{
+            width: '100%',
+          }}
+          onKeyDown={addPostHandler}
+          onChange={(e) => setContent(e.target.value)}
+          value={content}
+        />
+      </Box>
+    </>
   );
 };
 
 export default AddPost;
+
 
