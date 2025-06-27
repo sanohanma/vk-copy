@@ -181,3 +181,8 @@ const AuthProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
 };
 
 export default AuthProvider; // <-- Убедись, что здесь export default!
+
+
+
+
+
