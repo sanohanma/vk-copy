@@ -198,15 +198,13 @@
 
 // export default Auth;
 
-
 import { Alert, Button, ButtonGroup, Grid, TextField } from '@mui/material';
 import React, { FC, SyntheticEvent, useEffect, useState } from 'react';
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
-} from 'firebase/auth';
+} from 'firebase/auth'; // getAuth() нам больше не нужен, т.к. используем ga из useAuth
 import { useAuth } from '../../providers/useAuth';
 import { useNavigate } from 'react-router-dom';
 
@@ -217,45 +215,78 @@ interface IUserData {
 }
 
 const Auth: FC = () => {
-  const { user } = useAuth();
+  const { user, ga } = useAuth(); // Используем ga (это наш 'auth') из контекста
   const navigate = useNavigate();
 
   const [isRegForm, setIsRegForm] = useState(false);
   const [userData, setUserData] = useState<IUserData>({ email: '', password: '', name: '' });
   const [error, setError] = useState('');
 
-  const handleLogin = async (e: SyntheticEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setError('');
+  // Логика перенаправления, если пользователь уже авторизован
+  useEffect(() => {
+    if (user) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
-    const auth = getAuth();
+  const handleSubmit = async (e: SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault(); // Предотвращаем перезагрузку страницы
+    setError(''); // Сбрасываем предыдущие ошибки
 
-    if (isRegForm) {
-      try {
-        const res = await createUserWithEmailAndPassword(auth, userData.email, userData.password);
-        if (res.user) {
-          await updateProfile(res.user, { displayName: userData.name });
-        }
-        await signInWithEmailAndPassword(auth, userData.email, userData.password);
-      } catch (error: any) {
-        setError(error.message || 'Ошибка регистрации');
-        return;
-      }
-    } else {
-      try {
-        await signInWithEmailAndPassword(auth, userData.email, userData.password);
-      } catch (error: any) {
-        setError(error.message || 'Ошибка авторизации');
-        return;
-      }
+    if (!userData.email || !userData.password || (isRegForm && !userData.name)) {
+      setError('Пожалуйста, заполните все поля.');
+      return;
     }
 
-    setUserData({ email: '', password: '', name: '' });
+    try {
+      if (isRegForm) {
+        // Регистрация
+        const res = await createUserWithEmailAndPassword(ga, userData.email, userData.password);
+        if (res.user) {
+          await updateProfile(res.user, { displayName: userData.name });
+          console.log('Пользователь успешно зарегистрирован и вошел!', res.user);
+        }
+        // После регистрации пользователь автоматически авторизуется,
+        // поэтому повторный signInWithEmailAndPassword не нужен.
+      } else {
+        // Вход
+        await signInWithEmailAndPassword(ga, userData.email, userData.password);
+        console.log('Пользователь успешно вошел!');
+      }
+      // Если все успешно (используем useEffect для навигации)
+      // setUserData({ email: '', password: '', name: '' }); // Очищаем форму
+    } catch (firebaseError: any) { // Используем firebaseError для ясности
+      console.error('Ошибка авторизации:', firebaseError);
+      // Firebase ошибки имеют свойство code (например, 'auth/invalid-email')
+      // Можно улучшить отображение ошибок для пользователя
+      let errorMessage = 'Произошла неизвестная ошибка.';
+      if (firebaseError.code) {
+        switch (firebaseError.code) {
+          case 'auth/invalid-email':
+            errorMessage = 'Некорректный адрес электронной почты.';
+            break;
+          case 'auth/user-disabled':
+            errorMessage = 'Пользователь отключен.';
+            break;
+          case 'auth/user-not-found':
+            errorMessage = 'Пользователь с таким email не найден.';
+            break;
+          case 'auth/wrong-password':
+            errorMessage = 'Неверный пароль.';
+            break;
+          case 'auth/email-already-in-use':
+            errorMessage = 'Этот email уже зарегистрирован.';
+            break;
+          case 'auth/weak-password':
+            errorMessage = 'Пароль должен быть не менее 6 символов.';
+            break;
+          default:
+            errorMessage = firebaseError.message;
+        }
+      }
+      setError(errorMessage);
+    }
   };
-
-  useEffect(() => {
-    if (user) navigate('/');
-  }, [user, navigate]);
 
   return (
     <>
@@ -264,8 +295,8 @@ const Auth: FC = () => {
           {error}
         </Alert>
       )}
-      <Grid display="flex" justifyContent="center" alignItems="center">
-        <form onSubmit={handleLogin} style={{ minWidth: 320 }}>
+      <Grid display="flex" justifyContent="center" alignItems="center" sx={{ minHeight: '100vh', backgroundColor: '#f0f2f5' }}>
+        <form onSubmit={handleSubmit} style={{ minWidth: 320, padding: 24, borderRadius: 8, boxShadow: '0 2px 10px rgba(0,0,0,0.1)', backgroundColor: '#fff' }}>
           {isRegForm && (
             <TextField
               type="text"
@@ -297,18 +328,18 @@ const Auth: FC = () => {
           />
           <ButtonGroup variant="outlined" fullWidth>
             <Button
-              type="submit"
+              type="submit" // Обе кнопки сабмитят форму
               onClick={() => setIsRegForm(false)}
               color={isRegForm ? 'inherit' : 'primary'}
             >
-              Auth
+              Войти
             </Button>
             <Button
-              type="submit"
+              type="submit" // Обе кнопки сабмитят форму
               onClick={() => setIsRegForm(true)}
               color={isRegForm ? 'primary' : 'inherit'}
             >
-              Register
+              Регистрация
             </Button>
           </ButtonGroup>
         </form>

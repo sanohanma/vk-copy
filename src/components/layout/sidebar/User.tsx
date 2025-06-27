@@ -31,72 +31,41 @@
 
 // export default User
 
-import { Avatar, Button, Card, Chip, Menu, MenuItem } from '@mui/material'
-import React, { useState } from 'react'
-import { useAuth } from '../../providers/useAuth'
+
+// src/layout/sidebar/User.tsx
+import { Avatar, Button, Card, Chip } from '@mui/material'
+import React from 'react'
+import { useAuth } from '../../providers/useAuth' // Проверьте путь
 
 const User = () => {
-    const { user, signOut, switchUser, users } = useAuth()
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+    const { user, signOut } = useAuth() // Получаем user и signOut
 
-    const handleUserClick = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget)
-    }
-
-    const handleClose = () => {
-        setAnchorEl(null)
-    }
-
-    const handleSwitchUser = (userId: string) => {
-        switchUser(userId)
-        handleClose()
-    }
+    console.log('Current user in User.tsx:', user); // Лог для отладки
 
     return (
         <Card
             variant="outlined"
-            sx={{ 
-                padding: 2, 
-                backgroundColor: '#F1F7FA', 
-                border: 'none', 
+            sx={{
+                padding: 2,
+                backgroundColor: '#F1F7FA',
+                border: 'none',
                 borderRadius: 3,
                 marginBottom: 5
             }}
         >
             <Chip
-                avatar={<Avatar alt='' src={user?.avatar}/>}
-                label={user?.name || 'Без имени'}
+                // Теперь user.avatar и user.name должны быть корректными благодаря AuthProvider
+                avatar={<Avatar alt='' src={user?.avatar || ''}/>} // Добавил || '' для безопасности
+                label={user?.name || user?.email || 'Без имени'} // Если имени нет, покажем email
                 variant='outlined'
-                onClick={handleUserClick}
                 sx={{
-                    display: 'flex', 
+                    display: 'flex',
                     marginBottom: 2,
-                    cursor: 'pointer',
-                    '&:hover': {
-                        backgroundColor: '#e3f2fd'
-                    }
                 }}
             />
-            
-            <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-            >
-                {users?.map((u) => (
-                    <MenuItem 
-                        key={u.id} 
-                        onClick={() => handleSwitchUser(u.id)}
-                        selected={u.id === user?.id}
-                    >
-                        <Avatar src={u.avatar} sx={{ width: 24, height: 24, mr: 1 }} />
-                        {u.name}
-                    </MenuItem>
-                ))}
-            </Menu>
 
-            <Button 
-                variant='outlined' 
+            <Button
+                variant='outlined'
                 onClick={signOut}
                 fullWidth
                 sx={{
