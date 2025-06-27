@@ -1,64 +1,37 @@
+// src/components/providers/AuthProvider.tsx
+import React, { createContext, useState, useEffect } from 'react';
+import { db } from '../../firebase';
+ // путь зависит от расположения файла
+// путь к firebase.ts
+import { IUser } from '../../types';
 
-
-
-import React, { createContext, FC, useEffect, useMemo, useState, ReactNode } from 'react';
-import { IUser, TypeSetState } from '../../types';
-import { Auth, getAuth, onAuthStateChanged } from 'firebase/auth';
-import { users } from '../layout/sidebar/dataUsers';
-import { useNavigate } from 'react-router-dom';
-import { getFirestore, Firestore } from 'firebase/firestore';
-
-interface IContext {
+interface AuthContextType {
   user: IUser | null;
-  setUser: TypeSetState<IUser | null>;
-  ga: Auth;
-  db: Firestore;
-  loading: boolean;
+  db: typeof db;
 }
 
-export const AuthContext = createContext<IContext>({} as IContext);
+export const AuthContext = createContext<AuthContextType>({
+  user: null,
+  db,
+});
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
+  // Здесь для простоты зафиксируем пользователя (например, Ислам)
   const [user, setUser] = useState<IUser | null>(null);
-  const [loading, setLoading] = useState(true); 
-  const ga = getAuth();
-  const db = getFirestore();
-  const navigate = useNavigate();
 
   useEffect(() => {
-    const unListen = onAuthStateChanged(ga, (authUser) => {
-      if (authUser) {
-        setUser({
-          id: Number(authUser.uid) || 1,
-          avatar: users[1]?.avatar || '',
-          name: authUser.displayName || '',
-        });
-      } else {
-        setUser(null);
-      }
-      setLoading(false);
+    // Имитируем получение юзера (нужно заменить на реальную авторизацию)
+    setUser({
+      id: 'HFP89AAbAuYT39PLJrVMJB3qEVo2',
+      name: 'Ислам Догдурбаев',
+      avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDJzEaxLN-jGRYYUO65pWu7Q9GXoNt4LUSSA&s',
     });
+  }, []);
 
-    return () => {
-      unListen();
-    };
-  }, [ga]);
-
-  const values = useMemo(() => ({
-    user,
-    setUser,
-    ga,
-    db,
-    loading,
-  }), [user, ga, db, loading]);
-
-  if (loading) {
-    return <div style={{ textAlign: 'center', marginTop: 50 }}>Загрузка...</div>;
-  }
-
-  return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, db }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
+

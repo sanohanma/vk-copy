@@ -64,4 +64,3 @@ const AddPost: FC = () => {
 };
 
 export default AddPost;
-

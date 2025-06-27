@@ -1,5 +1,5 @@
 // src/layout/sidebar/UserItems.tsx
-import React, { FC } from 'react';
+import React from 'react';
 import {
   Box,
   Avatar,
@@ -10,22 +10,27 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
 import { QuestionAnswer } from '@mui/icons-material';
+import { Link, useNavigate } from 'react-router-dom';
 import { users } from './dataUsers';
+import { useAuth } from '../../providers/useAuth';
 
-const UserItems: FC = () => {
+const UserItems = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  // Удаляем текущего пользователя из списка
+  const friends = users.filter(u => u.id !== user?.id);
 
   return (
     <Card
       variant="outlined"
       sx={{ padding: 2, backgroundColor: '#F1F7FA', border: 'none', borderRadius: 3 }}
     >
-      {users.map(user => (
+      {friends.map(friend => (
         <Link
-          key={user.id}
-          to={`/profile/${user.id}`}
+          key={friend.id}
+          to={`/message/${friend.id}`}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -34,20 +39,13 @@ const UserItems: FC = () => {
             marginBottom: 12,
           }}
         >
-          <Box
-            sx={{
-              position: 'relative',
-              marginRight: 2,
-              width: 50,
-              height: 50,
-            }}
-          >
-            <Avatar src={user.avatar} alt={user.name} sx={{ width: 46, height: 46, borderRadius: '50%' }} />
-            {user.isInNetwork && (
+          <Box sx={{ position: 'relative', marginRight: 2, width: 50, height: 50 }}>
+            <Avatar src={friend.avatar} alt={friend.name} sx={{ width: 46, height: 46 }} />
+            {friend.isInNetwork && (
               <Box
                 sx={{
                   backgroundColor: '#4FFB14',
-                  border: '1px solid #F1F7FA',
+                  border: '2px solid white',
                   width: 12,
                   height: 12,
                   position: 'absolute',
@@ -58,23 +56,11 @@ const UserItems: FC = () => {
               />
             )}
           </Box>
-          <span style={{ fontSize: 14 }}>{user.name}</span>
+          <span style={{ fontSize: 14 }}>{friend.name}</span>
         </Link>
       ))}
-
-      <List>
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => navigate('/messages')}>
-            <ListItemIcon>
-              <QuestionAnswer />
-            </ListItemIcon>
-            <ListItemText primary="Сообщения" />
-          </ListItemButton>
-        </ListItem>
-      </List>
     </Card>
   );
 };
 
 export default UserItems;
-

@@ -22,3 +22,4 @@ const Card: FC<CardProps> = ({ children }) => {
 };
 
 export default Card;
+
